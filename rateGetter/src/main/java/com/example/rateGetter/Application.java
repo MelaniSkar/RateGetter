@@ -1,8 +1,12 @@
 package com.example.rateGetter;
 
 
+import com.example.rateGetter.listener.*;
 import com.example.rateGetter.publisher.TickerMessagePublisher;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
+import io.vertx.core.spi.VerticleFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -11,12 +15,21 @@ import javax.annotation.PostConstruct;
 @SpringBootApplication
 public class Application {
 
+  @Autowired
+  private RequestMessageListener requestMessageListener;
+  @Autowired
+  private TickerListener tickerListener;
+  @Autowired
+  private TickerMessagePublisher tickerMessagePublisher;
+
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
   }
 
   @PostConstruct
-  public void deployVerticle() {
-    Vertx.vertx().deployVerticle(TickerMessagePublisher);
+  public void deployVerticles() {
+    Vertx.vertx().deployVerticle(requestMessageListener);
+    Vertx.vertx().deployVerticle(tickerListener);
+    Vertx.vertx().deployVerticle(tickerMessagePublisher);
   }
 }
