@@ -28,8 +28,9 @@ public class Application {
 
   @PostConstruct
   public void deployVerticles() {
-    Vertx.vertx().deployVerticle(requestMessageListener);
-    Vertx.vertx().deployVerticle(tickerListener);
-    Vertx.vertx().deployVerticle(tickerMessagePublisher);
+    Vertx vertx = Vertx.vertx();
+    vertx.deployVerticle(requestMessageListener);
+    vertx.deployVerticle(tickerListener);
+    vertx.deployVerticle(tickerMessagePublisher);
   }
 }
